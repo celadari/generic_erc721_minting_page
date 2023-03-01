@@ -1,0 +1,22 @@
+.card {
+    padding: 2em;
+    border: 1px solid grey;
+    margin: 2em;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.imgWrapper {
+    max-width: 50%;
+}
+
+.img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    overflow: hidden;
+    margin: 1em;
+}

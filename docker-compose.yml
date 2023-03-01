@@ -1,0 +1,66 @@
+version: '3'
+services:
+  postgres:
+    container_name: 'generic_erc721_mint_page_postgres'
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  server:
+    container_name: 'generic_erc721_mint_page_server'
+    build:
+      dockerfile: Dockerfile.dev
+      context: './server'
+    depends_on:
+      - postgres
+    volumes:
+      - /usr/src/app/node_modules
+      - ./server:/usr/src/app
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres_password
+      - DB_DIALECT=postgres
+      - DB_HOST=postgres
+      - DB_DATABASE=postgres
+      - DB_PORT=5432
+      - AUTHENTICATION_AUTH_SECRET=<authentication_auth_secret>
+      - SMART_CONTRACT_TOKENS_NB=<number_nft_tokens>
+      - SMART_CONTRACT_IS_REVEALED=<is_nft_revealed>
+    links:
+      - postgres
+  client:
+    container_name: 'generic_erc721_mint_page_client'
+    stdin_open: true
+    depends_on:
+      - server
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    environment:
+      - REACT_APP_SMART_CONTRACT_NFT=<nft_smart_contract_address>
+      - REACT_APP_TOKEN_PRICE_NFT=<nft_token_price_in_ethereum>
+      - REACT_APP_UNREVEALED_TOKEN_URI_NFT=<unrevealed_nft_json_uri>
+      - REACT_APP_UNREVEALED_TOKEN_SIGNATURE_NFT=<unrevealed_nft_json_uri_signature>
+      - REACT_APP_IPFS_GATEWAY_URL=<ipfs_gateway_url>
+    links:
+      - server
+    volumes:
+      - /usr/src/app/node_modules
+      - ./client:/user/src/app
+  nginx:
+    container_name: 'generic_erc721_mint_page_nginx'
+    depends_on:
+      - server
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
+volumes:
+  postgres:
+    driver: local
