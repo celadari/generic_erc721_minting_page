@@ -1,0 +1,8 @@
+db_smart_contract_user: "{{ vault_db_smart_contract_user }}"
+db_smart_contract_database: "{{ vault_db_smart_contract_database }}"
+db_smart_contract_port: "{{ vault_db_smart_contract_port }}"
+db_smart_contract_port_inside_container: "{{ vault_db_smart_contract_port_inside_container }}"
+db_smart_contract_password: "{{ vault_db_smart_contract_password }}"
+db_smart_contract_host: "{{ vault_db_smart_contract_host }}"
+
+remote_path_json_abi_file: "{{ vault_remote_path_json_abi_file }}"

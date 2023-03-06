@@ -1,0 +1,44 @@
+- name: Fetch unrevealed token uri
+  postgresql_query:
+    login_host: "{{ db_smart_contract_host }}"
+    db: "{{ db_smart_contract_database }}"
+    login_user: "{{ db_smart_contract_user }}"
+    login_password: "{{ db_smart_contract_password }}"
+    port: "{{ db_smart_contract_port }}"
+    query: "SELECT json_uri FROM unrevealed_tokens;"
+  register: unrevealed_token_json_uri_query
+- name: Set fact unrevealed_token_json_uri
+  ansible.builtin.set_fact:
+    unrevealed_token_json_uri: "{{ unrevealed_token_json_uri_query['query_result'][0]['json_uri'] }}"
+
+- name: Fetch 'smart_contract_address'
+  postgresql_query:
+    login_host: "{{ db_smart_contract_host }}"
+    db: "{{ db_smart_contract_database }}"
+    login_user: "{{ db_smart_contract_user }}"
+    login_password: "{{ db_smart_contract_password }}"
+    port: "{{ db_smart_contract_port }}"
+    query: "SELECT address FROM smart_contracts;"
+  register: smart_contracts_address_query
+- name: Set fact smart_contracts_address
+  ansible.builtin.set_fact:
+    smart_contract_address: "{{ smart_contracts_address_query['query_result'][0]['address'] }}"
+
+- name: Fetch unrevealed tokens reveal voucher signature
+  postgresql_query:
+    login_host: "{{ db_smart_contract_host }}"
+    db: "{{ db_smart_contract_database }}"
+    login_user: "{{ db_smart_contract_user }}"
+    login_password: "{{ db_smart_contract_password }}"
+    port: "{{ db_smart_contract_port }}"
+    query: "SELECT signature FROM unrevealed_tokens;"
+  register: unrevealed_tokens_signature_query
+- name: Set fact unrevealed_tokens_signature
+  ansible.builtin.set_fact:
+    unrevealed_tokens_signature: "{{ unrevealed_tokens_signature_query['query_result'][0]['signature'] }}"
+
+- name: Fetch smart contract abi .json file
+  fetch:
+    src: "{{ remote_path_json_abi_file }}"
+    dest: "{{ role_path }}/../../../client/src/smart_contract/"
+    flat: true
