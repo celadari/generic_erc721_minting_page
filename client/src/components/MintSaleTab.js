@@ -12,7 +12,7 @@ const MintSaleTab = () => {
             const uri = process.env.REACT_APP_UNREVEALED_TOKEN_URI_NFT;
             const signature = process.env.REACT_APP_UNREVEALED_TOKEN_SIGNATURE_NFT;
             try {
-                const value = Web3.utils.toWei((parseFloat(process.env.REACT_APP_TOKEN_PRICE_NFT) * amount).toString(), 'ether');
+                const value = Web3.utils.toWei((parseFloat(process.env.REACT_APP_TOKEN_PRICE_IN_ETH_NFT) * amount).toString(), 'ether');
                 await window.contract.methods.safeMint(amount, {uri}, signature).send({ from: accounts[0], value: value, gasLimit: 10 ** 6 });
             } catch (err) {
                 console.error('error: ', err);

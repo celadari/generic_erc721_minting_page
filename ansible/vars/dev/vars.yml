@@ -1,0 +1,9 @@
+# Copyright 2023 celadari. All rights reserved. MIT license.
+
+# smart contract
+nb_tokens: 9336
+smart_contract_is_revealed: false
+smart_contract_token_price_in_eth: 1.5
+
+# ipfs gateway
+ipfs_gateway_url: "https://cloudflare-ipfs.com/ipfs"

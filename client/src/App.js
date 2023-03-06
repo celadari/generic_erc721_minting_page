@@ -3,7 +3,6 @@ import Web3 from 'web3';
 import NavBar from './components/NavBar';
 import MintAirDropTab from './components/MintAirDropTab';
 import MintSaleTab from './components/MintSaleTab';
-import MintSaleTab from './components/MintSaleTab';
 import RevealTab from './components/RevealTab';
 import ListTokensTab from './components/ListTokensTab/ListTokensTab';
 import './App.css';

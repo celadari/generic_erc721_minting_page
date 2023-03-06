@@ -1,0 +1,19 @@
+# Copyright 2023 celadari. All rights reserved. MIT license.
+
+# default root directory
+path_output_generated_env_file: "{{ role_path }}/../../.."
+
+# database
+db_user: "{{ vault_db_user }}"
+db_database: "{{ vault_db_database }}"
+db_port: "{{ vault_db_port }}"
+db_port_inside_container: "{{ vault_db_port_inside_container }}"
+db_password: "{{ vault_db_password }}"
+
+# server
+server_authentication_auth_secret: "{{ vault_server_authentication_auth_secret }}"
+
+# smart contract
+smart_contract_address: "{{ vault_smart_contract_address }}"
+unrevealed_token_json_uri: "{{ vault_unrevealed_token_json_uri }}"
+unrevealed_tokens_signature: "{{ vault_unrevealed_tokens_signature }}"

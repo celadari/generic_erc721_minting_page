@@ -3,12 +3,14 @@ services:
   postgres:
     container_name: 'generic_erc721_mint_page_postgres'
     image: 'postgres:latest'
-    environment:
-      - POSTGRES_PASSWORD=postgres_password
     ports:
-      - 5432:5432
-    volumes:
-      - postgres:/var/lib/postgresql/data
+      - "${POSTGRES_PORT}:${POSTGRES_PORT_INSIDE_CONTAINER}"
+    command:
+      - "-p $POSTGRES_PORT_INSIDE_CONTAINER"
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
   server:
     container_name: 'generic_erc721_mint_page_server'
     build:
@@ -20,15 +22,15 @@ services:
       - /usr/src/app/node_modules
       - ./server:/usr/src/app
     environment:
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres_password
+      - DB_USER=$POSTGRES_USER
+      - DB_PASSWORD=$POSTGRES_PASSWORD
       - DB_DIALECT=postgres
       - DB_HOST=postgres
-      - DB_DATABASE=postgres
-      - DB_PORT=5432
-      - AUTHENTICATION_AUTH_SECRET=<authentication_auth_secret>
-      - SMART_CONTRACT_TOKENS_NB=<number_nft_tokens>
-      - SMART_CONTRACT_IS_REVEALED=<is_nft_revealed>
+      - DB_DATABASE=$POSTGRES_DB
+      - DB_PORT=$POSTGRES_PORT_INSIDE_CONTAINER
+      - AUTHENTICATION_AUTH_SECRET=$AUTHENTICATION_AUTH_SECRET
+      - SMART_CONTRACT_TOKENS_NB=$SMART_CONTRACT_TOKENS_NB
+      - SMART_CONTRACT_IS_REVEALED=$SMART_CONTRACT_IS_REVEALED
     links:
       - postgres
   client:
@@ -40,11 +42,11 @@ services:
       dockerfile: Dockerfile.dev
       context: ./client
     environment:
-      - REACT_APP_SMART_CONTRACT_NFT=<nft_smart_contract_address>
-      - REACT_APP_TOKEN_PRICE_NFT=<nft_token_price_in_ethereum>
-      - REACT_APP_UNREVEALED_TOKEN_URI_NFT=<unrevealed_nft_json_uri>
-      - REACT_APP_UNREVEALED_TOKEN_SIGNATURE_NFT=<unrevealed_nft_json_uri_signature>
-      - REACT_APP_IPFS_GATEWAY_URL=<ipfs_gateway_url>
+      - REACT_APP_SMART_CONTRACT_NFT=$SMART_CONTRACT_ADDRESS
+      - REACT_APP_TOKEN_PRICE_IN_ETH_NFT=$SMART_CONTRACT_TOKEN_PRICE_IN_ETH_NFT
+      - REACT_APP_UNREVEALED_TOKEN_URI_NFT=$SMART_CONTRACT_UNREVEALED_TOKEN_URI_NFT
+      - REACT_APP_UNREVEALED_TOKEN_SIGNATURE_NFT=$SMART_CONTRACT_UNREVEALED_TOKEN_SIGNATURE_NFT
+      - REACT_APP_IPFS_GATEWAY_URL=$IPFS_GATEWAY_URL
     links:
       - server
     volumes:
