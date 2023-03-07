@@ -1,0 +1,18 @@
+# database minting page
+db_user: "{{ vault_db_user }}"
+db_database: "{{ vault_db_database }}"
+db_port: "{{ vault_db_port }}"
+db_port_inside_container: "{{ vault_db_port_inside_container }}"
+db_password: "{{ vault_db_password }}"
+db_host: "{{ vault_db_host }}"
+
+# database smart contract
+db_smart_contract_user: "{{ vault_db_smart_contract_user }}"
+db_smart_contract_database: "{{ vault_db_smart_contract_database }}"
+db_smart_contract_port: "{{ vault_db_smart_contract_port }}"
+db_smart_contract_port_inside_container: "{{ vault_db_smart_contract_port_inside_container }}"
+db_smart_contract_password: "{{ vault_db_smart_contract_password }}"
+db_smart_contract_host: "{{ vault_db_smart_contract_host }}"
+
+# role parameters
+load_only_if_table_is_empty: true

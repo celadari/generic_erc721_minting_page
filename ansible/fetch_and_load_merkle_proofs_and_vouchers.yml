@@ -1,0 +1,20 @@
+# Copyright 2023 celadari. All rights reserved. MIT license.
+---
+- name: Fetch and load merkle proofs table
+  hosts: localhost
+  gather_facts: yes
+  connection: local
+  vars:
+    - env: dev
+  vars_files:
+    - "./vars/{{ env }}/vars.yml"
+    - "./vars/{{ env }}/vault"
+  roles:
+    - role: copy_table_from_remote
+      vars:
+        - load_only_if_table_is_empty: true
+        - table_to_copy: merkle_tree_proofs
+    - role: copy_table_from_remote
+      vars:
+        - load_only_if_table_is_empty: true
+        - table_to_copy: vouchers

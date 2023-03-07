@@ -1,0 +1,41 @@
+# Check if table is empty
+- name: Check if table is empty or not
+  postgresql_query:
+    login_host: "{{ db_host }}"
+    db: "{{ db_database }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    port: "{{ db_port }}"
+    query: "SELECT EXISTS(SELECT * FROM {{ table_to_copy }});"
+  register: does_exist_data_in_table
+- name: Set fact table_is_empty
+  ansible.builtin.set_fact:
+    load_table: "{{ (not load_only_if_table_is_empty) or (not does_exist_data_in_table['query_result'][0]['exists']) }}"
+
+- name: Make temporary directory
+  file:
+    path: /tmp/generic_erc721_smart_contract
+    state: directory
+  when: load_table is true
+- name: Dump table into local .sql.gz file
+  community.postgresql.postgresql_db:
+    login_host: "{{ db_smart_contract_host }}"
+    db: "{{ db_smart_contract_database }}"
+    login_user: "{{ db_smart_contract_user }}"
+    login_password: "{{ db_smart_contract_password }}"
+    port: "{{ db_smart_contract_port }}"
+    state: dump
+    target: "/tmp/generic_erc721_smart_contract/{{ table_to_copy }}.sql.gz"
+    target_opts: "-t {{ table_to_copy }}"
+  when: load_table is true
+- name: Load table from .sql.gz file
+  community.postgresql.postgresql_db:
+    login_host: "{{ db_host }}"
+    db: "{{ db_database }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    port: "{{ db_port }}"
+    state: restore
+    target: "/tmp/generic_erc721_smart_contract/{{ table_to_copy }}.sql.gz"
+    target_opts: "-t {{ table_to_copy }}"
+  when: load_table is true
