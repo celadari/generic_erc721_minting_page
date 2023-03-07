@@ -9,6 +9,13 @@
   vars_files:
     - "./vars/{{ env }}/vars.yml"
     - "./vars/{{ env }}/vault"
+  pre_tasks:
+    - name: Install python packages
+      ansible.builtin.pip:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - psycopg2-binary
   roles:
     - role: copy_table_from_remote
       vars:
